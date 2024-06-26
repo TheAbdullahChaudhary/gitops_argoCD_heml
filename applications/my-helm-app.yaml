@@ -1,0 +1,21 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: my-helm-app
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: 'https://github.com/<your-username>/my-gitops-repo'  # URL of your Git repository
+    path: helm-charts/my-helm-chart  # Path to the directory containing the Helm chart
+    targetRevision: main  # Branch, tag, or commit SHA to sync from
+    helm:
+      valueFiles:
+        - values.yaml  # Specify the Helm values file
+  destination:
+    server: 'https://kubernetes.default.svc'  # Kubernetes cluster API endpoint
+    namespace: default
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
